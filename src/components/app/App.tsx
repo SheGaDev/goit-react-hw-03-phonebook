@@ -28,6 +28,20 @@ class App extends Component<object, State> {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    if (contacts && JSON.parse(contacts).length) {
+      this.setState({ contacts: JSON.parse(contacts) });
+      return;
+    }
+  }
+
+  componentDidUpdate(_: unknown, prevState: Readonly<State>) {
+    if (prevState.contacts.length !== this.state.contacts.length) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   contactCreate = (contact: Form) => {
     if (
       this.state.contacts.some((cont) => cont.name.toLowerCase() === contact.name.toLowerCase())
